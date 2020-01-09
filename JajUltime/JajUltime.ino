@@ -32,7 +32,7 @@ void loop() {
 	const auto date = realTimeClock.getDateTime();
 	const auto timeStr = realTimeClock.dateFormat("Hi", date); // H = Hour (00-24), i = Minutes (00-60)
 	clockDisplay.setChars(timeStr);
-
+	
 	if (toggleClockButton.isClicked())
 	{
 		enableClockDisplay = !enableClockDisplay;

@@ -32,7 +32,7 @@ namespace Devices {
 		clockDisplay.begin(COMMON_CATHODE, cdNumDigits, cdDigitPins, cdSegmentPins, true);
 		clockDisplay.setBrightness(100);
 		lcd.begin(16, 2);
-		lightLed.turnOn();
+		// lightLed.turnOn();
 	}
 
 	void update()

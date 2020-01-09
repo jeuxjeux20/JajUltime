@@ -23,17 +23,17 @@ String CalculatorView::numToString(const CalcNumber number, const int decimals =
 void CalculatorView::render()
 {
 	bool operationChanged;
-	if (this->updateInput(&operationChanged)) {
+	if (updateInput(&operationChanged)) {
 		if (operationChanged)
 		{
 			lcd.clear();
 		}
 		const CalcNumber currentInput = *getCurrentInput();
-		const auto currentInputStr = numToString(currentInput, max(this->decimalPlaces, 2));
-		if (this->operation != Unset)
+		const auto currentInputStr = numToString(currentInput, max(decimalPlaces, 2));
+		if (operation != Unset)
 		{
 			lcd.setCursor(0, 0);
-			lcd.print(numToString(this->input));
+			lcd.print(numToString(input));
 			lcd.setCursor(13, 0);
 			lcd.print(' ');
 			lcd.print(operationChar(operation));
@@ -43,7 +43,7 @@ void CalculatorView::render()
 		lcd.print(currentInputStr);
 	}
 
-	if (this->operation == Unset) {
+	if (operation == Unset) {
 		lcd.setCursor(0, 0);
 		lcd.print("Calculette");
 	}
@@ -72,13 +72,14 @@ bool CalculatorView::updateInput(bool* operationChanged)
 		{
 			const int inputNumber = keypadInput - '0';
 			if (inputNumber >= 0 && inputNumber <= 9) {
+				CalcNumber* currentInput = getCurrentInput();
 				if (decimalPlaces == 0) {
-					*getCurrentInput() *= 10;
-					*getCurrentInput() += inputNumber;
+					*currentInput *= 10;
+					*currentInput += inputNumber;
 				}
 				else
 				{
-					*getCurrentInput() += inputNumber / pow(10, decimalPlaces);
+					*currentInput += inputNumber / pow(10, decimalPlaces);
 					decimalPlaces++;
 				}
 				return true;
@@ -125,7 +126,7 @@ bool CalculatorView::changeOperation(const Operation op, bool* operationChanged)
 		// The result will be:
 		// 270        *
 		//            0
-		this->calculate(this->operation);
+		calculate(this->operation);
 	}
 	else
 	{
@@ -141,16 +142,16 @@ void CalculatorView::calculate(Operation op)
 	switch (op)
 	{
 	case Plus:
-		this->input += this->secondInput;
+		input += secondInput;
 		break;
 	case Minus:
-		this->input -= this->secondInput;
+		input -= secondInput;
 		break;
 	case Times:
-		this->input *= this->secondInput;
+		input *= secondInput;
 		break;
 	case Divide:
-		this->input /= this->secondInput;
+		input /= secondInput;
 		break;
 	}
 	resetUserInput();
@@ -158,8 +159,8 @@ void CalculatorView::calculate(Operation op)
 
 void CalculatorView::showFinalResult()
 {
-	calculate(this->operation);
-	this->operation = Unset;
+	calculate(operation);
+	operation = Unset;
 }
 
 void CalculatorView::eraseAll(bool* operationChanged)
@@ -167,8 +168,8 @@ void CalculatorView::eraseAll(bool* operationChanged)
 	CalcNumber* currentInput = getCurrentInput();
 	if (*currentInput == 0)
 	{
-		this->operation = Unset;
-		this->input = 0;
+		operation = Unset;
+		input = 0;
 		if (operationChanged != nullptr)
 			*operationChanged = true;
 	}
@@ -181,11 +182,11 @@ void CalculatorView::eraseAll(bool* operationChanged)
 
 void CalculatorView::resetUserInput()
 {
-	this->decimalPlaces = 0;
-	this->secondInput = 0;
+	decimalPlaces = 0;
+	secondInput = 0;
 }
 
 auto CalculatorView::getCurrentInput() -> CalcNumber*
 {
-	return this->operation == Unset ? &input : &secondInput;
+	return operation == Unset ? &input : &secondInput;
 }

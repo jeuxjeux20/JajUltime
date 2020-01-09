@@ -13,7 +13,7 @@
 class CalculatorView : public View
 {
 	using CalcNumber = double;
-
+	
 	enum Operation
 	{
 		Unset,
